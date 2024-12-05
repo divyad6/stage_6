@@ -32,17 +32,28 @@ const Status QU_Select(const string & result,
     AttrDesc attrDescArray[projCnt];
     for (int i = 0; i < projCnt; i++)
     {
+        std::cout << "Getting attrDescArray " << i << std::endl;
         Status status = attrCat->getInfo(projNames[i].relName,
                                          projNames[i].attrName,
                                          attrDescArray[i]);
         if (status != OK)
         {
+            std::cout << "failed 0" << std::endl;
             return status;
         }
     }
 
+    std::cout << "Getting attrDesc" << std::endl;
+
     AttrDesc attrDesc;
-    attrCat->getInfo(attr->relName, attr->attrName, attrDesc);
+    Status status = attrCat->getInfo(attr->relName, attr->attrName, attrDesc);
+    if (status != OK)
+    {
+        std::cout << "failed 0.5" << std::endl;
+        return status;
+    }
+
+    std::cout << "Getting reclen" << std::endl;
 
     int reclen = 0;
     for (int i = 0; i < projCnt; i++)
