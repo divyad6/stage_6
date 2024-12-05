@@ -50,7 +50,7 @@ const Status QU_Select(const string & result,
         reclen += attrDescArray[i].attrLen;
     }
 
-    ScanSelect(result, projCnt, attrDescArray, &attrDesc, op, attrValue, reclen)
+    ScanSelect(result, projCnt, attrDescArray, &attrDesc, op, attrValue, reclen);
 }
 
 
