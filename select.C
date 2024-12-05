@@ -50,7 +50,11 @@ const Status QU_Select(const string & result,
         reclen += attrDescArray[i].attrLen;
     }
 
+    std::cout << "Calling ScanSelect" << std::endl;
+
     ScanSelect(result, projCnt, attrDescArray, &attrDesc, op, attrValue, reclen);
+
+    std::cout << "Called ScanSelect" << std::endl;
 }
 
 
