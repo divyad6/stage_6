@@ -104,6 +104,7 @@ const Status ScanSelect(const string & result,
     outputRec.data = (void *) outputData;
     outputRec.length = reclen;
 
+    std::cout << "name " << attrDesc->relName << std::endl;
     HeapFileScan scan(attrDesc->relName, status);
     if (status != OK)
     {
