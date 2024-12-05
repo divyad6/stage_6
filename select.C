@@ -46,11 +46,20 @@ const Status QU_Select(const string & result,
     std::cout << "Getting attrDesc" << std::endl;
 
     AttrDesc attrDesc;
-    Status status = attrCat->getInfo(attr->relName, attr->attrName, attrDesc);
-    if (status != OK)
+    Operator our_operator = op;
+    if (attr != nullptr)
     {
-        std::cout << "failed 0.5" << std::endl;
-        return status;
+        Status status = attrCat->getInfo(attr->relName, attr->attrName, attrDesc);
+        if (status != OK)
+        {
+            std::cout << "failed 0.5" << std::endl;
+            return status;
+        }
+    }
+    else
+    {
+         our_operator = EQ;
+         attrValue = nullptr;
     }
 
     std::cout << "Getting reclen" << std::endl;
@@ -63,7 +72,7 @@ const Status QU_Select(const string & result,
 
     std::cout << "Calling ScanSelect" << std::endl;
 
-    ScanSelect(result, projCnt, attrDescArray, &attrDesc, op, attrValue, reclen);
+    ScanSelect(result, projCnt, attrDescArray, &attrDesc, our_operator, attrValue, reclen);
 
     std::cout << "Called ScanSelect" << std::endl;
 }
