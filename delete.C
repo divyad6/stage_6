@@ -1,6 +1,5 @@
 #include "catalog.h"
 #include "query.h"
-#include "heapfile.h"
 
 
 /*
@@ -70,7 +69,6 @@ const Status QU_Delete(const string & relation,
 
 	// iterate through scan and delete the matching records
 	RID rid; 
-	Record rec;
 	while (scan.scanNext(rid) == OK) {
 		status = scan.deleteRecord();
 		if (status != OK) { // problem when trying to delete record
@@ -84,5 +82,3 @@ const Status QU_Delete(const string & relation,
 	return OK;
 
 }
-
-
