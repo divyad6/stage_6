@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "insert.C": "cpp",
+        "delete.C": "cpp",
+        "select.C": "cpp"
+    }
+}
