@@ -58,8 +58,9 @@ const Status QU_Select(const string & result,
     }
     else
     {
-         our_operator = EQ;
-         attrValue = nullptr;
+		strcpy(attrDesc.relName, attrDescArray[0].relName);
+        our_operator = EQ;
+        attrValue = nullptr;
     }
 
     std::cout << "Getting reclen" << std::endl;
@@ -72,9 +73,10 @@ const Status QU_Select(const string & result,
 
     std::cout << "Calling ScanSelect" << std::endl;
 
-    ScanSelect(result, projCnt, attrDescArray, &attrDesc, our_operator, attrValue, reclen);
+    Status status = ScanSelect(result, projCnt, attrDescArray, &attrDesc, our_operator, attrValue, reclen);
 
     std::cout << "Called ScanSelect" << std::endl;
+    return status;
 }
 
 
@@ -104,19 +106,34 @@ const Status ScanSelect(const string & result,
     outputRec.data = (void *) outputData;
     outputRec.length = reclen;
 
-    std::cout << "name " << attrDesc->relName << std::endl;
-    HeapFileScan scan(string(attrDesc->relName), status);
-    if (status != OK)
-    {
-        std::cout << "failed 2" << std::endl;
-        return status;
-    }
+	HeapFileScan scan(string(attrDesc->relName), status);
+	if (status != OK) {
+		cout << "failed 2" << endl;
+		return status;
+	}
 
-    status = scan.startScan(attrDesc->attrOffset,
-                                 attrDesc->attrLen,
-                                 (Datatype) attrDesc->attrType,
-                                 filter,
-                                 op);
+	int i;
+	float f;
+
+	if (filter == nullptr) {
+		status = scan.startScan(0, 0, STRING, NULL, EQ);
+	}
+	else {
+		switch(attrDesc->attrType) {
+			char* value;
+			case INTEGER:
+				value = (char*) filter;
+				i = atoi(value);
+				status = scan.startScan(attrDesc->attrOffset, attrDesc->attrLen, (Datatype) attrDesc->attrType, (char *)&i, op);
+			case FLOAT:
+				value = (char*) filter;
+				f = atof(value);
+				status = scan.startScan(attrDesc->attrOffset, attrDesc->attrLen, (Datatype) attrDesc->attrType, (char *)&f, op);
+			default:
+				status = scan.startScan(attrDesc->attrOffset, attrDesc->attrLen, (Datatype) attrDesc->attrType, filter, op);
+		}
+	}	
+
     if (status != OK)
     {
         std::cout << "failed 3" << std::endl;
@@ -124,6 +141,7 @@ const Status ScanSelect(const string & result,
     }
 
     RID rid;
+    // iterate through scan and copy matching records into output
     while (scan.scanNext(rid) == OK)
     {
         Record record;
