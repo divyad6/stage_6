@@ -27,12 +27,10 @@ const Status QU_Select(const string & result,
 		       const char *attrValue)
 {
    // Qu_Select sets up things and then calls ScanSelect to do the actual work
-    cout << "Doing QU_Select " << endl;
 
     AttrDesc attrDescArray[projCnt];
     for (int i = 0; i < projCnt; i++)
     {
-        std::cout << "Getting attrDescArray " << i << std::endl;
         Status status = attrCat->getInfo(projNames[i].relName,
                                          projNames[i].attrName,
                                          attrDescArray[i]);
@@ -42,8 +40,6 @@ const Status QU_Select(const string & result,
             return status;
         }
     }
-
-    std::cout << "Getting attrDesc" << std::endl;
 
     AttrDesc attrDesc;
     Operator our_operator = op;
@@ -63,19 +59,12 @@ const Status QU_Select(const string & result,
         attrValue = nullptr;
     }
 
-    std::cout << "Getting reclen" << std::endl;
-
     int reclen = 0;
     for (int i = 0; i < projCnt; i++)
     {
         reclen += attrDescArray[i].attrLen;
     }
-
-    std::cout << "Calling ScanSelect" << std::endl;
-
     Status status = ScanSelect(result, projCnt, attrDescArray, &attrDesc, our_operator, attrValue, reclen);
-
-    std::cout << "Called ScanSelect" << std::endl;
     return status;
 }
 
@@ -90,7 +79,6 @@ const Status ScanSelect(const string & result,
 			const char *filter,
 			const int reclen)
 {
-    cout << "Doing HeapFileScan Selection using ScanSelect()" << endl;
 
     Status status;
 
